@@ -1,16 +1,16 @@
-# Using the Bundled Source
+# 使用捆绑源
 
-For most folks, you'll want to install Slate via `npm`, in which case you can follow the regular [Installing Slate](./installing-slate.md) guide.
+对于大多数人来说，你会希望通过 `npm` 安装 Slate，在这种情况下，你可以遵循常规的 [安装指南](./installing-slate.md) 。
 
-But, if you'd rather install Slate by simply adding a `<script>` tag to your application, this guide will help you. To make the "bundled" use case simpler, each version of Slate ships with a bundled source file called `slate.js`.
+但是，如果你更愿意简单地在你的应用程序中添加一个 `<script>` 标签来安装 Slate，那么本指南将对你有所帮助。为了使"捆绑"的情况下使用更加简单，Slate的每一个版本都附带了一个名为 `slate.js` 的文件。
 
-To get a copy of `slate.js`, download the version of slate you want from npm:
+要获得 `slate.js` 的副本，可以从 npm 下载你想要的指定版本：
 
 ```
 npm install slate@latest
 ```
 
-And then look in the `node_modules` folder for the bundled `slate.js` file:
+然后在 `node_modules` 文件夹里获取到 `slate.js` 文件：
 
 ```
 node_modules/
@@ -20,9 +20,9 @@ node_modules/
       slate.min.js
 ```
 
-A minified version called `slate.min.js` is also included for convenience.
+为了方便起见，还包含了一个名为 `slate.min.js` 的压缩版本。
 
-Before you can add `slate.js` to your page, you need to bring your own copy of `react`, `react-dom` and `react-dom-server`, like so:
+在你添加 `slate.js` 到页面之前，你需要自己提供 `react` ， `react-dom` 和 `react-dom-server` 文件，像这样：
 
 ```html
 <script src="./vendor/react.js"></script>
@@ -30,15 +30,15 @@ Before you can add `slate.js` to your page, you need to bring your own copy of `
 <script src="./vendor/react-dom-server.js"></script>
 ```
 
-This ensures that Slate isn't bundling its own copy of Immutable and React, which would greatly increase the file size of your application.
+这会确保 Slate 不会绑定自己的 Immutable 和 React 版本，这样（如果捆绑）会大大增加你的应用程序的大小。
 
-Then you can add `slate.js` after those includes:
+然后你可以添加 `slate.js` 在以上代码之后：
 
 ```html
 <script src="./vendor/slate.js"></script>
 ```
 
-To make things easier, for quick prototyping, you can also use the [`unpkg.com`](https://unpkg.com/#/) delivery network that makes working with bundled npm modules easier. In that case, your includes would look like:
+为了让事情更加简单，对于原型制作，你也可以使用 [`unpkg.com`](https://unpkg.com/#/) 分发网络，这使得与捆绑的 npm modules 一起使用更加方便。在这种情况下，你应该像下面这样：
 
 ```html
 <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
@@ -48,4 +48,4 @@ To make things easier, for quick prototyping, you can also use the [`unpkg.com`]
 <script src="https://unpkg.com/slate-react/dist/slate-react.js"></script>
 ```
 
-That's it, you're ready to go!
+就是这样，你已经准备好一切了！
