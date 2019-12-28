@@ -1,18 +1,18 @@
-# Saving to a Database
+# 保存到数据库
 
-Now that you've learned the basics of how to add functionality to the Slate editor, you might be wondering how you'd go about saving the content you've been editing, such that you can come back to your app later and have it load.
+现在你已经学会了如何向 Slate 编辑器添加功能的基本知识，你可能想要知道如何保存你已经编辑过的内容，这样你就可以在之后返回应用程序并且加载它。
 
-In this guide, we'll show you how to add logic to save your Slate content to a database for storage and retrieval later.
+在这篇指南中，我们会像你展示如何添加逻辑，以便将你在 Slate 中编辑的内容保存到一个数据库中并在随后读取它。
 
-Let's start with a basic editor:
+让我们从一个基本的编辑器开始：
 
-```js
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -24,29 +24,19 @@ const App = () => {
 }
 ```
 
-That will render a basic Slate editor on your page, and when you type things will change. But if you refresh the page, everything will be reverted back to its original value—nothing saves!
+它将会渲染一个基本的 Slate 编辑器在页面上，随着你输入内容会发生变化。但是如果你刷新页面，所有内容都将回到一开始的时候 -- 什么都没有被保存！
 
-What we need to do is save the changes you make somewhere. For this example, we'll just be using [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage), but it will give you an idea for where you'd need to add your own database hooks.
+我们需要做的是保存你在某个地方做的改变。对于这个例子来说，虽然我们仅仅使用了 [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) ，但是这会给你怎么保存数据带来灵感。
 
-So, in our `onChange` handler, we need to save the `value`:
+所以，在我们的 `onChange` 事件处理函数中，我们需要保存 `value` ：
 
-```js
-const defaultValue = [
-  {
-    children: [
-      {
-        text: 'A line of text in a paragraph.',
-      },
-    ],
-  },
-]
-
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -58,7 +48,7 @@ const App = () => {
       onChange={value => {
         setValue(value)
 
-        // Save the value to Local Storage.
+        // 在 Local Storage 里保存值。
         const content = JSON.stringify(value)
         localStorage.setItem('content', content)
       }}
@@ -69,19 +59,19 @@ const App = () => {
 }
 ```
 
-Now whenever you edit the page, if you look in Local Storage, you should see the `content` value changing.
+现在无论何时你编辑页面，如果你查看 Local Storage，你应该会看到 `content` 的值已经被改变。
 
-But... if you refresh the page, everything is still reset. That's because we need to make sure the initial value is pulled from that same Local Storage location, like so:
+但是，如果你刷新页面，还是和之前一样，什么都不存在了。这是因为我们需要确保初始值是从同一个 Local Storage 读取的。就像这样：
 
-```js
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
-  // Update the initial content to be pulled from Local Storage if it exists.
+  // 如果 Local Storage 存在值，用它来更新初始值。
   const [value, setValue] = useState(
     JSON.parse(localStorage.getItem('content')) || [
       {
         type: 'paragraph',
-        children: [{ text: 'A line of text in a paragraph.' }],
+        children: [{ text: '段落中的一段文本。' }],
       },
     ]
   )
@@ -102,30 +92,30 @@ const App = () => {
 }
 ```
 
-Now you should be able to save changes across refreshes!
+现在你应该能够保存刷新之间的变化了！
 
-Success—you've got JSON in your database.
+成功了 — 你已经有一个 JSON 对象在你的数据库了。
 
-But what if you want something other than JSON? Well, you'd need to serialize your value differently. For example, if you want to save your content as plain text instead of JSON, we can write some logic to serialize and deserialize plain text values:
+但是如果你想要保存的数据格式不是 JSON 呢？ 没问题，只要你用不同的方式去序列化你的值就好了。比如说你想要保存纯文本而不是 JSON，我们可以编写一些逻辑来序列化和反序列化纯文本的值。
 
-```js
-// Import the `Node` helper interface from Slate.
+```jsx
+// 从 Slate 导入 `Node` 帮助函数接口。
 import { Node } from 'slate'
 
-// Define a serializing function that takes a value and returns a string.
+// 定义一个参数为 `value` 返回值是纯文本的序列化函数。
 const serialize = value => {
   return (
     value
-      // Return the string content of each paragraph in the value's children.
+      // 返回这个 value 中每一个段落中的子节点的字符串内容。
       .map(n => Node.string(n))
-      // Join them all with line breaks denoting paragraphs.
+      // 用换行符（用换行符来区分段落）来连接他们。
       .join('\n')
   )
 }
 
-// Define a deserializing function that takes a string and returns a value.
+// 定义一个参数是字符串返回值是 `value` 的反序列化函数
 const deserialize = string => {
-  // Return a value array of children derived by splitting the string.
+  // 分隔字符串，返回一个包含value的child数组。
   return string.split('\n').map(line => {
     return {
       children: [{ text: line }],
@@ -135,7 +125,7 @@ const deserialize = string => {
 
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
-  // Use our deserializing function to read the data from Local Storage.
+  // 使用我们的反序列化函数来从 Local Storage 中读取数据。
   const [value, setValue] = useState(
     deserialize(localStorage.getItem('content')) || ''
   )
@@ -146,7 +136,7 @@ const App = () => {
       value={value}
       onChange={value => {
         setValue(value)
-        // Serialize the value and save the string value to Local Storage.
+        // 序列化 `value` 并将产生的字符串保存到 Local Storage。
         localStorage.setItem('content', serialize(value))
       }}
     >
@@ -156,8 +146,8 @@ const App = () => {
 }
 ```
 
-That works! Now you're working with plain text.
+它也正常工作了！现在你保存的是纯文本。
 
-You can emulate this strategy for any format you like. You can serialize to HTML, to Markdown, or even to your own custom JSON format that is tailored to your use case.
+你可以将你所喜欢的格式仿照这个策略去保存。你可以序列化为为 HTML，Markdown，甚至是根据你的实际情况定制的 JSON 格式。
 
-> 🤖 Note that even though you _can_ serialize your content however you like, there are tradeoffs. The serialization process has a cost itself, and certain formats may be harder to work with than others. In general we recommend writing your own format only if your use case has a specific need for it. Otherwise, you're often better leaving the data in the format Slate uses.
+> 🤖 请注意，虽然你可以用任何喜欢的方式去序列化值，但是他们需要被权衡。序列化过程本身是有成本的，有些格式可能比其他格式更加难以使用。通常来说，我们建议仅当在你有特殊用途的时候才编写自己的格式。另外，通常使用 Slate 默认的格式是最好的。
