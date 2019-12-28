@@ -1,22 +1,22 @@
-# Using Commands
+# 使用命令
 
-Up until now, everything we've learned has been about how to write one-off logic for your specific Slate editor. But one of the most powerful things about Slate is that it lets you model your specific rich text "domain" however you'd like, and write less one-off code.
+直到现在为止，我们已经学到的所有事情就是如何为定制的 Slate 编辑器写一次性的逻辑。但是 Slate 最强大的功能之一在于 Slate 可以让你按照喜好去定制富文本“域”模型，并减少一次性代码的编写。
 
-In the previous guides we've written some useful code to handle formatting code blocks and bold marks. And we've hooked up the `onKeyDown` handler to invoke that code. But we've always done it using the built-in `Editor` helpers directly, instead of using "commands".
+在之前的指南中我们已经编写了一些有用的代码用来处理代码块和加粗格式。我们使用 `onKeyDown` 事件处理函数来调用这些代码。但是我们总是直接使用 `Editor` 内置的帮助器（helpers）来完成它们，而不是使用命令（commands）。
 
-Slate lets you augment the built-in `editor` object to handle your own custom rich text commands. And you can even use pre-packaged "plugins" which add a given set of functionality.
+Slate 允许你增加内置的 `editor` 对象来处理定制的富文本命令。你甚至可以使用预先打包的插件（plugins）来添加一组给定的功能。
 
-Let's see how this works.
+让我们看看如何编写吧。
 
-We'll start with our app from earlier:
+我们还是从之前的应用程序继续：
 
-```js
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -74,12 +74,12 @@ const App = () => {
 }
 ```
 
-It has the concept of "code blocks" and "bold formatting". But these things are all defined in one-off cases inside the `onKeyDown` handler. If you wanted to reuse that logic elsewhere you'd need to extract it.
+它已经有了代码块和加粗格式的概念。但是这些都是在 `onKeyDown` 事件处理程序中一次性定义的。如果你想要在其他地方重用这些逻辑，你需要把它们提取出来。
 
-We can instead implement these domain-specific concepts by creating custom helper functions:
+我们可以通过创建自定义的帮助函数来实现这些特定于域的概念：
 
-```js
-// Define our own custom set of helpers.
+```jsx
+// 定义一个我们自己的帮助函数。
 const CustomEditor = {
   isBoldMarkActive(editor) {
     const [match] = Editor.nodes(editor, {
@@ -122,7 +122,7 @@ const App = () => {
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -149,7 +149,7 @@ const App = () => {
             return
           }
 
-          // Replace the `onKeyDown` logic with our new commands.
+          // 使用我们新编写的命令来替代 `onKeyDown` 中的逻辑
           switch (event.key) {
             case '`': {
               event.preventDefault()
@@ -170,15 +170,15 @@ const App = () => {
 }
 ```
 
-Now our commands are clearly defined and you can invoke them from anywhere we have access to our `editor` object. For example, from hypothetical toolbar buttons:
+现在我们已经明确定义了命令，所以在任何可以访问到 `editor` 对象的地方都可以调用它们。举例来说，从假想的工具栏按钮：
 
-```js
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -196,7 +196,7 @@ const App = () => {
   }, [])
 
   return (
-    // Add a toolbar with buttons that call the same methods.
+    // 添加一个工具栏按钮来调用同一个方法。
     <Slate editor={editor} value={value} onChange={value => setValue(value)}>
       <div>
         <button
@@ -245,6 +245,6 @@ const App = () => {
 }
 ```
 
-That's the benefit of extracting the logic.
+这就是提取逻辑的好处。
 
-And there you have it! We just added a ton of functionality to the editor with very little work. And we can keep all of our command logic tested and isolated in a single place, making the code easier to maintain.
+我们再一次完成了编码工作！我们仅仅做了非常少量的工作就为编辑器添加了大量的功能。并且我们可以把命令逻辑放在一个单独的地方进行测试和隔离，从而使代码更容易进行维护。
