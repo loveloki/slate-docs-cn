@@ -1,18 +1,18 @@
-# Applying Custom Formatting
+# 应用自定义格式
 
-In the previous guide we learned how to create custom block types that render chunks of text inside different containers. But Slate allows for more than just "blocks".
+在之前的指南中我们学习了怎么创建一个自定义的 block 类型，去渲染不同的文本块。但是 Slate 支持自定义的不仅仅是 "blocks" 。
 
-In this guide, we'll show you how to add custom formatting options, like **bold**, _italic_, `code` or ~~strikethrough~~.
+在这篇指南中，我们会像你展示如何添加自定义格式选项，如**粗体**, _斜体_, `代码` 或者 ~~删除线~~。
 
-So we start with our app from earlier:
+让我们从之前的应用程序继续前进吧：
 
-```js
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -49,15 +49,15 @@ const App = () => {
 }
 ```
 
-And now, we'll edit the `onKeyDown` handler to make it so that when you press `control-B`, it will add a `bold` format to the currently selected text:
+现在，我们编辑 `onKeyDown` 函数，当你按下 `control-B` 时，它会添加一个 `bold` 格式到你所选择的文本上：
 
-```js
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -80,7 +80,7 @@ const App = () => {
           }
 
           switch (event.key) {
-            // When "`" is pressed, keep our existing code block logic.
+            // 当按下 "`" ，保留我们代码块存在的逻辑。
             case '`': {
               event.preventDefault()
               const [match] = Editor.nodes(editor, {
@@ -94,14 +94,14 @@ const App = () => {
               break
             }
 
-            // When "B" is pressed, bold the text in the selection.
+            // 当按下 "B" ，加粗所选择的文本。
             case 'b': {
               event.preventDefault()
               Transforms.setNodes(
                 editor,
                 { bold: true },
-                // Apply it to text nodes, and split the text node up if the
-                // selection is overlapping only part of it.
+                // 应用到文本节点上，
+                // 如果所选内容仅仅是全部文本的一部分，则拆分它们。
                 { match: n => Text.isText(n), split: true }
               )
               break
@@ -114,12 +114,12 @@ const App = () => {
 }
 ```
 
-Okay, so we've got the hotkey handler setup... but! If you happen to now try selecting text and hitting `Ctrl-B`, you won't notice any change. That's because we haven't told Slate how to render a "bold" mark.
+非常棒，我们设置好了这个按键处理函数。但是！如果你已经尝试选择文本并按下 `Ctrl-B` ，你并不会看到任何的变化。这是因为我们还没有告诉 Slate 如何去渲染 "bold" 格式。
 
-For every format you add, Slate will break up the text content into "leaves", and you need to tell Slate how to read it, just like for elements. So let's define a `Leaf` component:
+对于你添加的所有格式，Slate 都会把文本打散到叶子（leaves）节点，然后你需要告诉 Slate 如何去理解它，就像是对待 block 元素那样。所以让我们来定义一个 `Leaf` 组件：
 
-```js
-// Define a React component to render leaves with bold text.
+```jsx
+// 定义一个 React 组件来加粗渲染叶子节点。
 const Leaf = props => {
   return (
     <span
@@ -132,17 +132,17 @@ const Leaf = props => {
 }
 ```
 
-Pretty familiar, right?
+看起来很熟悉，对吗？
 
-And now, let's tell Slate about that leaf. To do that, we'll pass in the `renderLeaf` prop to our editor. Also, let's allow our formatting to be toggled by adding active-checking logic.
+接下来，让我们告诉 Slate 这个叶子节点。为了做到这点，我们会通过 prop 传递一个名为 `renderLeaf` 的属性到编辑器。同时，让我们添加主动检查逻辑来改变格式。
 
-```js
+```jsx
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
   const [value, setValue] = useState([
     {
       type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.' }],
+      children: [{ text: '段落中的一段文本。' }],
     },
   ])
 
@@ -155,7 +155,7 @@ const App = () => {
     }
   }, [])
 
-  // Define a leaf rendering function that is memoized with `useCallback`.
+  // 通过 `useCallback` 定义一个可以记忆的渲染叶子节点的函数。
   const renderLeaf = useCallback(props => {
     return <Leaf {...props} />
   }, [])
@@ -164,7 +164,7 @@ const App = () => {
     <Slate editor={editor} value={value} onChange={value => setValue(value)}>
       <Editable
         renderElement={renderElement}
-        // Pass in the `renderLeaf` function.
+        // 传递渲染叶子节点函数。
         renderLeaf={renderLeaf}
         onKeyDown={event => {
           if (!event.ctrlKey) {
@@ -213,4 +213,4 @@ const Leaf = props => {
 }
 ```
 
-Now, if you try selecting a piece of text and hitting `Ctrl-B` you should see it turn bold! Magic!
+现在，如果你尝试选择一些文本然后按下 `Ctrl-B` ，你会看到它变成了粗体！再一次让人惊叹！
