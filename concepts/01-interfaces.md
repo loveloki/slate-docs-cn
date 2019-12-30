@@ -1,6 +1,6 @@
-# Interfaces
+# 接口
 
-Slate works with pure JSON objects. All it requires is that those JSON objects conform to certain interfaces. For example, a text node in Slate must obey the `Text` interface:
+Slate 使用纯 JSON对象。它要求 JSON 对象符合某些接口。比如，一个 Slate 的文本节点必须遵守 `Text` 接口：
 
 ```ts
 interface Text {
@@ -9,15 +9,15 @@ interface Text {
 }
 ```
 
-Which means it must have a `text` property with a string of content.
+这就意味着它必须有一个文本内容的 `text` 属性。
 
-But **any** other custom properties are also allowed, and completely up to you. This lets you tailor your data to your specific domain and use case, adding whatever formatting logic you'd like, without Slate getting in the way.
+但是也可以添加**任何**其他的自定义属性，这完全取决于你。你可以为特殊用例和域，添加任何你喜欢的格式逻辑来定制数据，而不会受到 Slate 的干扰。
 
-This interface-based approach separates Slate from most other richtext editors which require you to work with their hand-rolled "model" classes, and makes it much easier to reason about. It also means that it avoids startup time penalties related to "initializing" the data model.
+这种基于接口的办法将 Slate 和大多数其他要求使用它们 hand-rolled 模型的富文本编辑器分开，这让你更容易去理解它。这同样意味着避免了在初始化数据模型时的时间损失。
 
-## Custom Properties
+## 自定义属性
 
-To take another example, the `Element` node interface in Slate is:
+再举一个例子， `Element` 节点在 Slate 中是这样子的：
 
 ```ts
 interface Element {
@@ -26,9 +26,9 @@ interface Element {
 }
 ```
 
-This is a very permissive interface. All it requires is that the `children` property be defined containing the element's child nodes.
+这是非常宽松的接口。它要求有一个 `children` 属性来定义所包含的子节点。
 
-But you can extend elements (or any other interface) with your own custom properties that are specific to your domain. For example, you might have "paragraph" and "link" elements:
+但是你可以使用自定义的属性来扩展元素（或者其他接口）。比如，你可能有一个 "paragraph" 和 "link" 元素：
 
 ```js
 const paragraph = {
@@ -39,55 +39,55 @@ const paragraph = {
 const link = {
   type: 'link',
   url: 'https://example.com',
-  children: [...]
+  children: [...],
 }
 ```
 
-The `type` and `url` properties there are your own custom API. Slate sees that they exist, but it doesn't ever use them for anything. However, when it goes to render a link element you'll receive an object with the custom properties attached, so that you can render it as:
+`type` 和 `url` 属性就是你的自定义 API 。Slate 知道这些属性的存在，但是它不知道这些属性能干嘛。不过，当它渲染一个 `link` 元素的时候，你会收到一个包含这些自定义属性的对象。所以你可以这样去渲染它：
 
 ```jsx
 <a href={element.url}>{element.children}</a>
 ```
 
-When getting started with Slate, it's important to understand all of the interfaces it defines. There are a handful of them that are discussed in each of the guides.
+在使用 Slate 的初始阶段，理解它定义的所有接口是很重要的。在每篇指南中都会有对于接口的一些讨论。
 
-## Helper Functions
+## 辅助函数
 
-In addition to the typing information, each interface in Slate also exposes a series of helper functions that make them easier to work with.
+除了输入信息之外，Slate 的每个接口也会暴露一系列的辅助函数，使它们更容易使用。
 
-For example, when working with nodes:
+比如，在处理节点时：
 
 ```js
 import { Node } from 'slate'
 
-// Get the string content of an element node.
+// 获取节点的文本内容。
 const string = Node.string(element)
 
-// Get the node at a specific path inside a root node.
+// 在根节点的特定路径处获取节点。
 const descendant = Node.get(value, path)
 ```
 
-Or, when working with ranges:
+或者，在使用 ranges （文档片段）的时候：
 
 ```js
 import { Range } from 'slate'
 
-// Get the start and end points of a range in order.
+// 按顺序获取一个 range 的开头和结尾
 const [start, end] = Range.edges(range)
 
-// Check if a range is collapsed to a single point.
+// 检查一个 range 是否是一个单点（气质位置和终止位置是同一点）
 if (Range.isCollapsed(range)) {
   // ...
 }
 ```
 
-There are lots of helper functions available for all of the common use cases when working with the different interfaces. When getting started it pays to read through them all, because you can often simplify complex logic into just a handful of lines of code with them.
+在处理不同的接口时，有大量的辅助函数可以用于所有常见的用例。当你开始写代码的时候，最好把他们都阅读一遍，因为通常你可以把复杂的逻辑简化为几行辅助函数代码。
 
-## Custom Helpers
+## 自定义辅助函数
 
-In addition to the built-in helper functions, you might want to define your own custom helper functions and expose them on your own custom namespaces.
+除了内置的辅助函数，你可能想要定义自己的辅助函数并且暴露在自定义的命名空间里面。
 
-For example, if your editor supports images, you might want a helper that determines if an element is an image element:
+举个例子，如果你的编辑器支持图片，你可能需要一个辅助函数来判断一个元素是不是图片元素：
 
 ```js
 const isImageElement = element => {
@@ -95,12 +95,12 @@ const isImageElement = element => {
 }
 ```
 
-You can define these as one-off functions easily. But you might also bundle them up into namespaces, just like the core interfaces do, and use them instead. For example:
+你可以轻松地把它们定义为一次性函数。但是你也可以像核心接口那样把它们绑定到命名空间，再去使用它们。比如：
 
 ```js
 import { Element } from 'slate'
 
-// You can use `MyElement` everywhere to have access to your extensions.
+// 你可以在任何地方使用 `MyElement` 来访问你的扩展。
 export const MyElement = {
   ...Element,
   isImageElement,
@@ -109,4 +109,4 @@ export const MyElement = {
 }
 ```
 
-This makes it easy to reuse domain-specific logic alongside the built-in Slate helpers.
+这样可以轻松地将定制域的逻辑与内置的 Slate 辅助函数一起重用。
