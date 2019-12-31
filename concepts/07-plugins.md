@@ -1,10 +1,10 @@
-# Plugins
+# 插件
 
-You've already seen how the behaviors of Slate editors can be overriden. These overrides can also be packaged up into "plugins" to be reused, tested and shared. This is one of the most powerful aspects of Slate's architecture.
+你已经知道了 Slate 编辑器 的行为可以被重写。这些重写可以被打包到一个插件里用于复用，测试以及分享。这就是关于 Slate 架构最强大的地方之前。
 
-A plugin is simply a function that takes an `Editor` object and returns it after it has augmented it in some way.
+插件是一个简单的函数，接收一个 `Editor` 对象，并在以某种方式对其更改后返回它。
 
-For example, a plugin that marks image nodes as "void":
+比如，一个标记图像节点为空（void）的插件：
 
 ```js
 const withImages = editor => {
@@ -18,7 +18,7 @@ const withImages = editor => {
 }
 ```
 
-And then to use the plugin, simply:
+然后可以这样使用它：
 
 ```js
 import { createEditor } from 'slate'
@@ -26,11 +26,11 @@ import { createEditor } from 'slate'
 const editor = withImages(createEditor())
 ```
 
-This plugin composition model makes Slate extremely easy to extend!
+这种插件组合模型使 Slate 极易扩展！
 
-## Helper Functions
+## 辅助函数
 
-In addition to the plugin functions, you might want to expose helper functions that are used alongside your plugins. For example:
+除了插件功能，你可能还想要暴露和插件一起使用的辅助函数。比如：
 
 ```js
 import { Editor, Element } from 'slate'
@@ -51,4 +51,4 @@ const MyElement = {
 }
 ```
 
-Then you can use `MyEditor` and `MyElement` everywhere and have access to all your helpers in one place.
+然后你就可以在任何地方同时使用 `MyEditor` 和 `MyElement` 了。
