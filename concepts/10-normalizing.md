@@ -1,32 +1,32 @@
-# Normalizing
+# 规范化（Normalizing）
 
-Slate editors can editor complex, nested data structures. And for the most part this is great, but in certain cases inconsistencies in the data structure can be introduced—most often when allowing a user to paste arbitrary richtext content.
+Slate 编辑器可以编辑复杂的，嵌套的数据结构。大部分时候它会完成的很好，但是有些情况下不一致的数据结构会被引入 — 通常是因为允许用户粘贴任意格式的富文本内容。
 
-"Normalizing" is how you can ensure that your editor's content is always of a certain shape. It's similar to "validating", except instead of just determining whether the content is valid or invalid, its job is to fix the content to make it valid again.
+"规范化" 是确保你的编辑器的内容总是正确形式的办法。它与"验证"相似，只是它的任务是修复内容，使它重新有效，而不仅仅是判断内容是否有效。
 
-## Built-in Constraints
+## 内建的约束
 
-Slate editors come with a few built-in constraints out of the box. These constraints are there to make working with content _much_ more predictable than standard `contenteditable`. All of the built-in logic in Slate depends on these constraints, so unfortunately you cannot omit them. They are...
+Slate 编辑器内置了开箱即用的约束。这些约束是为了确保内容比 `contenteditable` 的标准内容更具有可预测性。Slate 所有内置的逻辑依靠这些约束，所以很可惜，你不能忽略它们。它们是：
 
-1. **All `Element` nodes must contain at least one `Text` descendant.** If an element node does not contain any children, an empty text node will be added as its only child. This constraint exists to ensure that the selection's anchor and focus points (which rely on referencing text nodes) can always be placed inside any node. With this, empty elements (or void elements) wouldn't be selectable.
+1. **所有 `Element` 节点最后必须包含至少一个 `Text` 节点。**如果一个元素节点不包含任何子节点，那么会添加一个空的文本节点作为它的唯一子节点。这个约束确保选择范围（selection）的锚点（anchor）和焦点（focus）总是指向任意节点内部（通过依赖文本节点的引用）。这样，空元素（或者“void”类型对象）就无法被选择。
 
-2. **Two adjacent texts with the same custom properties will be merged.** If two adjacent text nodes have the same formatting, they're merged into a single text node with a combined text string of the two. This exists to prevent the text nodes from only ever expanding in count in the document, since both adding and removing formatting results in splitting text nodes.
+2. **两个相邻的有同样属性的文本会被合并。** 如果两个相邻的文本节点有相同的格式，它们会被合并到一个文本节点中。这样会避免文本节点无限制扩展数量，因为添加和删除格式都会分割文本节点。
 
-3. **Block nodes can only contain other blocks, or inline and text nodes.** For example, a `paragraph` block cannot have another `paragraph` block element _and_ a `link` inline element as children at the same time. The type of children allowed is determined by the first child, and any other non-conforming children are removed. This ensures that common richtext behaviors like "splitting a block in two" function consistently.
+3. **块节点要么只能包含其他块节点，要么包含行内节点与文本节点。** 比如，一个 `paragraph` 块节点不能包含同时包含另一个 `paragraph` 块节点和一个 `link` 行内元素。可以包含的子节点由第一个子节点所决定，任何其他不被允许的子节点会被移除。这确保了常见的富文本行为（比如“把一个块元素分割成两个”）始终如一。
 
-4. **The top-level editor node can only contain block nodes.** If any of the top-level children are inline or text nodes they will be removed. This ensures that there are always block nodes in the editor so that behaviors like "splitting a block in two" work as expected.
+4. **顶级的编辑器节点只能包含块节点。** 如果任何一个顶级子节点是行内节点或者是文本节点，它们会被移除。这确保了编辑器总是包含块节点，以便像是“分割一个块节点为两个块节点”之类的行为可以按照预期被执行。
 
-These default constraints are all mandated because they make working with Slate documents _much_ more preditable.
+这些默认约束都是强制性的，因为它们保证 Slate 文档有_更好的_可预测性。
 
-> 🤖 Although these constraints are the best we've come up with now, we're always looking for ways to have Slate's built-in constraints be less constraining if possible—as long as it keeps standard behaviors easy to reason about. If you come up with a way to reduce or remove a built-in constraint with a different approach, we're all ears!
+> 🤖 虽然这些是我们现在能够发现最好的约束，但是我们总会寻找其他办法使 Slate 内置的约束尽可能地变得更少 — 只要它能保持默认行为容易理解。如果你找到一种方法来减少或者移除内置约束，我们都会洗耳恭听！
 
-## Adding Constraints
+## 添加约束
 
-The built-in constraints are fairly generic. But you can also add your own constraints on top of the built-in ones that are specific to your domain.
+内置约束是相当通用的。但是你可以在特定于你的域的内置约束之上添加自己的约束。
 
-To do this, you extend the `normalizeNode` function on the editor. The `normalizeNode` function gets called every time an operation is applied that inserts or updates a node (or its descendants), giving you the opportunity to ensure that the changes didn't leave it in an invalid state, and correcting the node if so.
+为了做到这些，你应该扩展编辑器的 `normalizeNode` 函数。在每一次对一个节点（或者他的后代）应用插入或者更新操作时都会调用 `normalizeNode` 函数，这让你有机会确保这个改变不会使其变得不可控，并且在这种情况下修正节点。
 
-For example here's a plugin that ensures `paragraph` blocks only have text or inline elements as children:
+比如这是一个确保 `paragraph` 的子元素只包含文本或行内节点的插件：
 
 ```js
 import { Element, Node } from 'slate'
@@ -37,7 +37,7 @@ const withParagraphs = editor => {
   editor.normalizeNode = entry => {
     const [node, path] = entry
 
-    // If the element is a paragraph, ensure it's children are valid.
+    // 对于段落元素，确保它的子元素是有效的。
     if (Element.isElement(node) && node.type === 'paragraph') {
       for (const [child, childPath] of Node.children(editor, path)) {
         if (Element.isElement(child) && !editor.isInline(child)) {
@@ -47,7 +47,7 @@ const withParagraphs = editor => {
       }
     }
 
-    // Fall back to the original `normalizeNode` to enforce other constraints.
+    // 退回默认的 `normalizeNode` 函数保证其他约束可用。
     normalizeNode(entry)
   }
 
@@ -55,15 +55,15 @@ const withParagraphs = editor => {
 }
 ```
 
-This example is fairly simple. Whenever `normalizeNode` gets called on a paragraph element, it loops through each of its children ensuring that none of them are block elements. And if one is a block element, it gets unwrapped, so that the block is removed and its children take its place. The node is "fixed".
+这个例子是很简单的。不论 `normalizeNode` 函数什么时候被段落元素调用，它会循环每一个子元素确保没有块元素。如果存在块元素，他会被解封，所以这个块元素被移除然后它的子元素替代了它。这样，这个节点就被修复了。
 
-But what if the child has nested blocks?
+但是如果子元素是嵌套的块元素呢？
 
-## Multi-pass Normalizing
+## 多重规范化
 
-One thing to understand about `normalizeNode` constraints is that they are **multi-pass**.
+需要去理解 `normalizeNode` 约束的一点是它是**多重的**。
 
-If you check the example above again, you'll notice the `return` statement:
+如果你再次查看这个例子，你会注意到它的 `return` ：
 
 ```js
 if (Element.isElement(child) && !editor.isInline(child)) {
@@ -72,15 +72,15 @@ if (Element.isElement(child) && !editor.isInline(child)) {
 }
 ```
 
-You might at first think this is odd, because with the `return` there, the original `normalizeNodes` will never be called, and the built-in constraints won't get a chance to run their own normalizations.
+你可能首先认为这是奇怪的，因为有了 `return` ，默认的 `normalizeNodes` 就永远不会被调用，那么内置的约束就不会有机会运行它自己的规范化。
 
-But, there's a slight "trick" to normalizing.
+但是，这是一点对于规范化的“假象”。
 
-When you do call `Editor.unwrapNodes`, you're actually changing the content of the node that is currently being normalized. So even though you're ending the current normalization pass, by making a change to the node you're kicking off a _new_ normalization pass. This results in a sort of _recursive_ normalizing.
+当你调用 `Editor.unwrapNodes` 的时候，你会自动改变节点的内容，而他们在之前已经被规范化了。所以即使结束了当前的规范化的进行，通过更改节点，你还是开始了新的一轮规范化操作。这导致了某种 _递归式_ 的规范化。
 
-This multi-pass characteristic makes it _much_ easier to write normalizations, because you only ever have to worry about fixing a single issue at once, and not fixing _every_ possible issue that could be putting a node in an invalid state.
+这种多次进行的特性使得编写规范化_更加容易_，因为你一次只需要去担心怎样修复一个单一的问题，不一次性修复_所有_可能的问题（这样可能让节点处于无效状态）。
 
-To see how this works in practice, let's start with this invalid document:
+要明白实际上它是如何工作的，让我们从一个无效的文档开始：
 
 ```jsx
 <editor>
@@ -92,9 +92,9 @@ To see how this works in practice, let's start with this invalid document:
 </editor>
 ```
 
-The editor starts by running `normalizeNode` on `<paragraph c>`. And it is valid, because contains only text nodes as children.
+编辑器从 `<paragraph c>` 开始运行 `normalizeNode` 操作。现在它是有效的，因为它的子节点只有文本节点。
 
-But then, it moves up the tree, and runs `normalizeNode` on `<paragraph b>`. This paragraph is invalid, since it contains a block element (`<paragraph c>`). So that child block gets unwrapped, resulting in a new document of:
+但是接下来，它移动到树的上一层，现在对 `<paragraph b>` 调用 `normalizeNode` 操作。这个段落是无效的，因为它包含了一个块元素（ `<paragraph c>` ）。所以这个块级的子元素被解封，现在新的文档是这样的：
 
 ```jsx
 <editor>
@@ -104,7 +104,7 @@ But then, it moves up the tree, and runs `normalizeNode` on `<paragraph b>`. Thi
 </editor>
 ```
 
-And in performing that fix, the top-level `<paragraph a>` changed. It gets normalized, and it is invalid, so `<paragraph b>` gets unwrapped, resulting in:
+随着修复的执行，顶级的 `<paragraph a>` 被改变了。它被规范化了，而且它也是无效的。所以 `<paragraph b>` 被解封，结果是：
 
 ```jsx
 <editor>
@@ -112,18 +112,18 @@ And in performing that fix, the top-level `<paragraph a>` changed. It gets norma
 </editor>
 ```
 
-And now when `normalizeNode` runs, no changes are made, so the document is valid!
+当运行 `normalizeNode` 时，没有发生任何变化，所以现在文档是有效的！
 
-> 🤖 For the most part you don't need to think about these internals. You can just know that anytime `normalizeNode` is called and you spot an invalid state, you can fix that single invalid state and trust that `normalizeNode` will be called again until the node becomes valid.
+> 🤖 大部分情况下你不需要考虑这些内部情况。你只需要知道不管什么时候你调用 `normalizeNode` 时发现无效状态，可以修复这个无效状态并且相信 `normalizeNode` 会被再次调用直到节点变得有效。
 
-## Incorrect Fixes
+## 错误的修复
 
-The one pitfall to avoid however it creating an infinite normalization loop. This can happen if you check for a specific invalid structure, but then **don't** actually fix that structure with the change you make to the node. Resulting in an infinite loop because the node continues to be flagged as invalid, but never fixed properly.
+然而，一个要避免的错误是它创建了无限的规范化循环。这是可能发生的，如果你查看特定的无效结构，但是接下来**没有**实际上通过改变这个节点来修复这个结构，就会发生这种情况。这样导致进入到一个无限循环，因为这个节点继续被标记为无效，但是从未被正确地修复！
 
-For example, consider a normalization that ensured `link` elements have a valid `url` property:
+比如，考虑规范化一个 `link` 元素，让它有一个有效的 `url` 属性：
 
 ```js
-// WARNING: this is an example of incorrect behavior!
+// 警告：这是一个错误的例子！
 const withLinks = editor => {
   const { normalizeNode } = editor
 
@@ -146,6 +146,6 @@ const withLinks = editor => {
 }
 ```
 
-This fix are incorrectly written. It wants to ensure that all `link` elements have a `url` property string. But to fix invalid links it sets the `url` to `null`, which is still not a string!
+这个修复程序写的不正确。它想要确保所有的 `link` 元素有一个 `url` 属性的字符串。但是修复无效的 `link` 元素时，它被设置为了 null，这不是一个字符串！
 
-In this case you'd either want to unwrap the link, removing it entirely. _Or_ expand your validation to accept an "empty" `url == null` as well.
+在这个例子中你可能会去解封这个链接，完全移除它。_或者_选择扩展验证，接受一个空的 url （`url == null`） 。
