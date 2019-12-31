@@ -1,8 +1,8 @@
-# Operations
+# 操作：Operations
 
-Operations are the granular, low-level actions that occur while invoking commands and transforms. A single high-level command could result in many low-level operations being applied to the editor.
+操作是在当调用命令和转换时候执行的细粒度（granular）低级操作。单个命令可能导致许多更低级的操作被应用到编辑器。
 
-Unlike commands, operations aren't extendable. Slate's core defines all of the possible operations that can occur on a richtext document. For example:
+和命令不同的地方是，操作是不可扩展的。Slate 核心定义了所有在富文本文档上可能用到的操作。比如说：
 
 ```js
 editor.apply({
@@ -31,6 +31,7 @@ editor.apply({
 })
 ```
 
-Under the covers Slate converts complex commands into the low-level operations and applies them to the editor automatically, so you rarely have to think about them.
+Slate 会自动将复杂的命令转换为低级操作，然后把它们应用到文档上，所以你基本上不用考虑它们。
 
-> 🤖 Slate's editing behaviors being defined as operations is what makes things like collaborative editing possible, because each change is easily define-able, apply-able, compose-able and event undo-able!
+> 🤖 Slate 的编辑行为被定义为操作（operations），这使得协同编辑成为可能，因为每个变化都是更容易被定义、应用、组合的，以及更容易实现撤销事件的！
+
