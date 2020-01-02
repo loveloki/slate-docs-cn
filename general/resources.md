@@ -1,16 +1,16 @@
-# Resources
+# 资源
 
-A few resources that are helpful for building with Slate.
+这是一些对你使用 Slate 有用的资源。
 
-## Libraries
+## 类库
 
-These libraries are helpful when developing with Slate:
+这是一些对你使用 Slate 进行开发有用的类库。
 
-- [`is-hotkey`](https://github.com/ianstormtaylor/is-hotkey) is a simple way to check whether an `onKeyDown` handler should fire for a given hotkey, handling cross-platform concerns like <kbd>cmd</kbd> vs. <kbd>ctrl</kbd> keys for you automatically.
+- [`is-hotkey`](https://github.com/ianstormtaylor/is-hotkey) 是一个简单的方式去检查当你按键的时候， `onKeyDown` 事件是否应该被激活，并且会自动地为你处理像是 <kbd>cmd</kbd> 还是 <kbd>ctrl</kbd> 这样的跨平台问题。
 
-## Products
+## 产品
 
-These products use Slate, and can give you an idea of what's possible:
+这些产品使用了 Slate,，它们可能会带你给一些灵感。
 
 - [Archbee](https://archbee.io)
 - [Cake](https://www.cake.co/)
@@ -28,15 +28,15 @@ These products use Slate, and can give you an idea of what's possible:
 - [Yuque](https://www.yuque.com/)
 - [Thoughts](https://thoughts.teambition.com)
 
-## Editors
+## 编辑器
 
-These pre-packaged editors are built on top of Slate, and can be helpful to see how you might structure your code:
+这些预先打包的编辑器是基于 Slate 构建的，它们可以帮助你明白如何组织自己的代码结构：
 
-- [Canner Editor](https://github.com/Canner/canner-slate-editor) is a rich text editor.
-- [Chatterslate](https://github.com/chatterbugapp/chatterslate) helps teach language grammar and more at [Chatterbug](https://chatterbug.com).
-- [French Press Editor](https://github.com/roast-cms/french-press-editor) is a customizeable editor with offline support.
-- [Nossas Editor](http://slate-editor.bonde.org/) is a drop-in WYSIWYG editor.
-- [ORY Editor](https://editor.ory.am/) is a self-contained, inline WYSIWYG editor library.
-- [Outline Editor](https://github.com/outline/rich-markdown-editor) is the editor that powers the [Outline](https://www.getoutline.com/) wiki.
+- [Canner Editor](https://github.com/Canner/canner-slate-editor) 是一个富文本编辑器。
+- [Chatterslate](https://github.com/chatterbugapp/chatterslate) 帮助教授语言语法，更多信息查看 [Chatterbug](https://chatterbug.com).
+- [French Press Editor](https://github.com/roast-cms/french-press-editor) 是一个支持离线使用的可定制的编辑器。
+- [Nossas Editor](http://slate-editor.bonde.org/)是一个所见即所得（WYSIWYG）的编辑器。
+- [ORY Editor](https://editor.ory.am/) 是一个自包含的，嵌入式的所见即所得编辑器库。
+- [Outline Editor](https://github.com/outline/rich-markdown-editor)是一个编辑器，这是它的  [Outline](https://www.getoutline.com/) wiki界面。
 
-(Or, if you have their exact use case, can be a drop-in editor for you.)
+或者，如果你有它们的确定用例，则可以为你提供一个嵌入式编辑器。
