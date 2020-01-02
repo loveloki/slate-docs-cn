@@ -78,23 +78,23 @@ Slate 尝试通过一些原则去解决 "[Why?](about:blank#why)" 这一节提�
 
 ## 文档
 
-如果你是第一次使用 Slate，可以查看 [Getting Started](http://docs.slatejs.org/walkthroughs/01-installing-slate) 实战演练和 [Concepts](http://docs.slatejs.org/concepts) 去熟悉 Slate 的架构和思维模型。
+如果你是第一次使用 Slate，可以查看 [Getting Started](./walkthroughs/01-installing-slate) 实战演练和 [Concepts](./concepts) 去熟悉 Slate 的架构和思维模型。
 
-- [**Walkthroughs**](http://docs.slatejs.org/walkthroughs)：实战演练
-- [**Concepts**](http://docs.slatejs.org/concepts)：概念
-- [**FAQ**](http://docs.slatejs.org/general/faq)：常见问题
-- [**Resources**](http://docs.slatejs.org/general/resources)：资源
+- [**Walkthroughs**](./walkthroughs)：实战演练
+- [**Concepts**](./concepts)：概念
+- [**FAQ**](./general/faq)：常见问题
+- [**Resources**](./general/resources)：资源
 
 如果这些还是不够，你可以随时 [阅读源码](https://github.com/ianstormtaylor/slate/tree/master/packages)，它含有大量的注释。
 
 这是被翻译成其他语言的文档:
 
-- [中文](https://doodlewind.github.io/slate-doc-cn/)：0.24.1版本翻译，太旧了。
+- [中文](https://github.com/loveloki/slate-docs-cn)：0.57.1版本翻译
 
 如果你正在维护一个翻译，请随意拉取请求。
 
 ## 贡献！
 
-所有的贡献都是超级受欢迎的！查看 [Contributing instructions](../Contributing.md) 获得更多信息！
+所有的贡献都是超级受欢迎的！查看 [Contributing instructions](https://github.com/ianstormtaylor/slate/blob/master/Contributing.md) 获得更多信息！
 
-Slate 使用 [MIT 许可协议](../License.md)。
+Slate 使用 [MIT 许可协议](https://github.com/ianstormtaylor/slate/blob/master/License.md)。

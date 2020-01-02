@@ -27,6 +27,6 @@
 ## General
 
 - [资源](./general/resources.md)
-- [贡献](../Contributing.md)
-- [更新日志](../Changelog.md)
+- [贡献](https://github.com/ianstormtaylor/slate/blob/master/Contributing.md)
+- [更新日志](https://github.com/ianstormtaylor/slate/blob/master/Changelog.md)
 - [常见问题](./general/faq.md)
