@@ -1,23 +1,23 @@
-# FAQ
+# 常见问题
 
-A series of common questions people have about Slate:
+一些关于 Slate 的常见问题是：
 
-- [Why is content pasted as plain text?](#why-is-content-is-pasted-as-plaintext)
-- [What can a `Block` node have as its children?](#what-can-a-block-node-have-as-its-children)
-- [What browsers and devices does Slate support?](#what-browsers-and-devices-does-slate-support)
+- [为什么将内容粘贴为纯文本？](#why-is-content-is-pasted-as-plaintext)
+- [ `Block` 节点可以拥有什么样子子节点？](#what-can-a-block-node-have-as-its-children)
+- [Slate 支持哪些浏览器和设备？](#what-browsers-and-devices-does-slate-support)
 
-### Why is content pasted as plain text?
+### 为什么将内容粘贴为纯文本？
 
-One of Slate's core principles is that, unlike most other editors, it does **not** prescribe a specific "schema" to the content you are editing. This means that Slate's core has no concept of "block quotes" or "bold formatting".
+Slate 核心的原则之一就是这个，不像其它的编辑器，它 **没有** 规定你用哪种特殊的 "schema" 来编辑内容。这意味着 Slate 核心没有块引用和加粗格式的概念。
 
-For the most part, this leads to increased flexbility without many downsides, but there are certain cases where you have to do a bit more work. Pasting is one of those cases.
+最重要的一点是，这样增加了扩展性（而没有其他副作用）,但是有一些情况下你不得不做更多的工作。粘贴就是这些情况之一。
 
-Since Slate knows nothing about your domain, it can't know how to parse pasted HTML content (or other content). So, by default whenever a user pastes content into a Slate editor, it will parse it as plain text. If you want it to be smarter about pasted content, you need to override the `insert_data` command and deserialize the `DataTransfer` object's `text/html` data as you wish.
+因为 Slate 对于你的域一无所知，它不知道如何解析被粘贴的 HTML 内容（或者其它内容）。所以默认情况下无论用户粘贴什么内容到 Slate 编辑器，它都会解析为纯文本。如果你想要它可以更智能地解析粘贴内容，你需要按照你的需求去重写  `insert_data` 命令和 反序列化  `DataTransfer` 对象的 `text/html` 数据。
 
-### What browsers and devices does Slate support?
+### Slate 支持什么浏览器和设备？
 
-Slate's goal is to support all the modern browsers on both desktop and mobile devices.
+Slate 的目标是支持所有桌面和移动设备的现代浏览器。
 
-However, right now Slate is in beta and is community-driven, so its support is not as robust as it could be. It's currently tested against the latest few versions of Chrome, Edge, Firefox and Safari on desktops. And it does not work in Internet Explorer. On mobile, iOS devices are supported but not regularly tested. Chrome on Android is supported on Slate 0.47 but is not currently supported in Slate 0.50+. If you want to add more browser or device support, we'd love for you to submit a pull request! Or in the case of incompatible browsers, build a plugin.
+然而，现在 Slate 是测试版并且是社区驱动的，所以它并做不到理想的支持。目前已经对桌面上最新版本的Chrome，Edge，Firefox 和 Safari 进行了测试。并且它无法在 Internet Explorer 中使用。对于移动设备，iOS 已被支持但没有进行定期测试。安卓 上面的 Chrome 支持 Slate 0.47 而不是最近发布的 Slate 0.50+。如果你想要添加更多的浏览器或设备支持，我们欢迎你提交拉取请求（pull request）！或者对不兼容的浏览器，构建一个插件。
 
-For older browsers, such as IE11, a lot of the now standard native APIs aren't available. Slate's position on this is that it is up to the user to bring polyfills (like https://polyfill.io) when needed for things like `el.closest`, etc. Otherwise we'd have to bundle and maintain lots of polyfills that others may not even need in the first place.
+对于更老的浏览器，比如 IE11，大量现代标准的原生 API 是不能用的。Slate 的看法是：在这种情况下取决于用户是否在使用 `el.closest` 这类东西的情况下提供 polyfills (比如 https://polyfill.io) 。否则我们需要捆绑和维护大量的 polyfills，但是其他人一开始甚至并不需要它们！
